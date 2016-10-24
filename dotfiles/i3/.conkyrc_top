@@ -1,0 +1,53 @@
+out_to_x no
+own_window no
+out_to_console yes
+background no
+max_text_width 0
+use_xft yes
+
+# Update interval in seconds
+update_interval 1.0
+
+# This is the number of times Conky will update before quitting.
+# Set to zero to run forever.
+# total_run_times 0
+
+# Shortens units to a single character (kiB->k, GiB->G, etc.). Default is off.
+short_units yes
+
+# How strict should if_up be when testing an interface for being up?
+# The value is one of up, link or address, to check for the interface
+# being solely up, being up and having link or being up, having link
+# and an assigned IP address. 
+if_up_strictness address
+
+# Add spaces to keep things from moving about?  This only affects certain objects.
+# use_spacer should have an argument of left, right, or none
+
+# Force UTF8? note that UTF8 support required XFT
+override_utf8_locale no
+
+# number of cpu samples to average
+# set to 1 to disable averaging
+cpu_avg_samples 2
+# template {"full_text": "", "color":"\#"},
+
+# Stuff after 'TEXT' will be formatted on screen
+TEXT
+[
+{ "full_text" : "${if_up eth0}Eth ${addr eth0} | extIP: ${exec curl https://icanhazip.com/} | ${endif}" , "separator" : false },
+{ "full_text" : "${if_up wlan0}WiFi ${wireless_essid} ${addr wlan0} | extIP: ${exec curl https://icanhazip.com/} |${endif}" , "separator" : false },
+{ "full_text" : "VOL ${exec pactl list sinks | grep '^[[:space:]]Volume:' | head -n $(( $SINK + 2 )) | tail -n 1 | sed -e 's,.* \([0-9][0-9]*\)%.*,\1,'}% |" , "separator" : false },
+
+{"full_text":"${if_match ${battery_percent}<=8}BAT ${battery} ${battery_time}","color":"\#ff0000","border":"\#ffffff","background":"\#ffffff","separator":false},\
+{"full_text":"${else}"},\
+{"full_text":"${if_match ${battery_percent}<=15}BAT ${battery} ${battery_time}","color":"\#ff0000","separator":false},\
+{"full_text":"${else}"},\
+{"full_text":"${if_match ${battery_percent}>=95}BAT ${battery} ${battery_time}","color":"\#64ff00","separator":false},\
+{"full_text":"${else}"},\
+{"full_text":"${if_match ${battery_percent}<95}BAT ${battery} ${battery_time}","separator":false},\
+{"full_text":"${else}"},\
+{"full_text":"${endif}${endif}${endif}${endif}"},
+{"full_text":"| uptime ${uptime} |" , "separator":false},
+{ "full_text" : "${time %a %d/%m/%y} ${time %H:%M:%S} |" , "separator" : false }
+],
